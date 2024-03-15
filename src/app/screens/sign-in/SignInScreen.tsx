@@ -55,6 +55,7 @@ function SignInScreen() {
       <Stack
         direction="column"
         css={{
+          width: "22%",
           padding: "40px",
           boxShadow: "20px 16px 0px #000",
           borderRadius: "16px",
