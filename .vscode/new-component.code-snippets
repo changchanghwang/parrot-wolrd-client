@@ -1,0 +1,22 @@
+{
+  "New Component": {
+    "scope": "typescriptreact",
+    "prefix": "nc",
+    "body": [
+      "function ${1:$TM_FILENAME_BASE}(props: { ${2} }) {",
+      "  // prop destruction",
+      "  // lib hooks",
+      "  // state, ref hooks",
+      "  // form hooks"
+      "  // query hooks",
+      "  // calculated values",
+      "  // effects",
+      "  // handlers",
+      "  $0",
+      "}",
+      "  $0",
+      "export { ${1:$TM_FILENAME_BASE} }",
+    ],
+    "description": "New Component",
+  },
+}
