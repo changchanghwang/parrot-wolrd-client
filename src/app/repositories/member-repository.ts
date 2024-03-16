@@ -36,27 +36,6 @@ export const authRepository = {
   async verifyVerificationId({ id }: { id: string }) {
     return httpClient.get(`/auth/email-verification/${id}`);
   },
-
-  /**
-   * 비밀번호 변경
-   * @param password
-   * @param passwordConfirm
-   * @param verificationId
-   */
-  async changePassword({
-    password,
-    passwordConfirm,
-    verificationId,
-  }: {
-    password: string;
-    passwordConfirm: string;
-    verificationId: string;
-  }) {
-    return httpClient.patch(`/auth/password-change/${verificationId}`, {
-      password,
-      passwordConfirm,
-    });
-  },
 };
 
 queryKeyMap.set(authRepository.verifyEmail, ["Auth"]);
