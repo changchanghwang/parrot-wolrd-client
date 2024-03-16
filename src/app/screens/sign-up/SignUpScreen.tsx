@@ -10,12 +10,22 @@ import { SIGN_UP_ROUTES } from "@routes";
 
 const validationSchema = yup
   .object({
-    email: emailSchema().required(),
-    password: passwordSchema({ match: false }).required(),
+    email: emailSchema().required("이메일을 입력해주세요."),
+    authCode: yup.string().required("인증번호를 입력해주세요."),
+    password: passwordSchema({ match: true }).required(
+      "비밀번호를 입력해주세요."
+    ),
+    passwordConfirm: yup
+      .string()
+      .oneOf(
+        [yup.ref("password")],
+        "비밀번호가 일치하지 않습니다. 다시한번 확인해주세요."
+      )
+      .required("비밀번호를 입력해주세요."),
   })
   .required();
 
-function SignInScreen() {
+function SignUpScreen() {
   // prop destruction
   // lib hooks
   // state, ref hooks
@@ -25,13 +35,15 @@ function SignInScreen() {
     register,
     handleSubmit,
     getValues,
-    formState: { errors },
+    formState: { errors, isValid },
   } = useForm<yup.InferType<typeof validationSchema>>({
     mode: "onChange",
     resolver: yupResolver(validationSchema),
     defaultValues: {
       email: "",
+      authCode: "",
       password: "",
+      passwordConfirm: "",
     },
   });
   // query hooks
@@ -63,20 +75,51 @@ function SignInScreen() {
         }}
         spacing="32px"
       >
-        <UnderlineTitle title="로그인" />
+        <UnderlineTitle title="회원가입" />
         <Stack direction="column" spacing="16px">
-          <TextField
-            css={{ borderRadius: "8px" }}
-            placeholder="이메일"
-            {...register("email")}
-            defaultValue={getValues("email")}
-          />
+          <Stack direction="row" spacing="8px">
+            <TextField
+              css={{ borderRadius: "8px", flex: 1 }}
+              placeholder="이메일"
+              {...register("email")}
+              defaultValue={getValues("email")}
+              error={!!errors.email}
+              helperText={errors.email?.message}
+            />
+            <Button variant="outlined" onClick={() => {}}>
+              인증
+            </Button>
+          </Stack>
+          <Stack direction="row" spacing="8px">
+            <TextField
+              css={{ borderRadius: "8px", flex: 1 }}
+              placeholder="인증번호"
+              {...register("authCode")}
+              defaultValue={getValues("authCode")}
+              error={!!errors.authCode}
+              helperText={errors.authCode?.message}
+            />
+            <Button variant="outlined" onClick={() => {}}>
+              확인
+            </Button>
+          </Stack>
           <TextField
             css={{ borderRadius: "8px" }}
             placeholder="비밀번호"
             type="password"
             {...register("password")}
             defaultValue={getValues("password")}
+            error={!!errors.password}
+            helperText={errors.password?.message}
+          />
+          <TextField
+            css={{ borderRadius: "8px" }}
+            placeholder="비밀번호 확인"
+            type="password"
+            {...register("passwordConfirm")}
+            defaultValue={getValues("passwordConfirm")}
+            error={!!errors.passwordConfirm}
+            helperText={errors.passwordConfirm?.message}
           />
           <Stack direction="column" spacing="4px">
             {errorMessage && (
@@ -86,48 +129,21 @@ function SignInScreen() {
             )}
             <Button
               variant="contained"
+              disabled={!isValid}
               css={{
                 backgroundColor: "#5555FF",
                 borderRadius: "32px",
+                fontSize: "20px",
                 ":hover": {
                   backgroundColor: "#7777FF",
                 },
-                fontSize: "20px",
               }}
-              onClick={handleSubmit(
-                (data) => {
-                  console.log(data);
-                },
-                (e) => {
-                  if (e.password?.type === "required") {
-                    setErrorMessage("비밀번호를 입력해주세요.");
-                  }
-                  if (e.email?.type === "required") {
-                    setErrorMessage("이메일을 입력해주세요.");
-                  } else {
-                    setErrorMessage(
-                      "이메일 또는 비밀번호가 잘못 입력되었습니다. 다시 확인해주세요."
-                    );
-                  }
-                }
-              )}
+              onClick={handleSubmit((data) => {
+                console.log(data);
+              })}
             >
-              로그인
+              회원가입
             </Button>
-          </Stack>
-          <Stack direction="column" alignItems="center">
-            <Typography
-              css={{
-                fontSize: "16px",
-                marginBottom: "8px",
-                color: "#5E6C83",
-              }}
-            >
-              계정이 없으신가요? &nbsp;
-              <Link to={SIGN_UP_ROUTES} css={{ color: "#5555FF" }}>
-                회원가입
-              </Link>
-            </Typography>
           </Stack>
         </Stack>
       </Stack>
@@ -135,4 +151,4 @@ function SignInScreen() {
   );
 }
 
-export { SignInScreen };
+export { SignUpScreen };

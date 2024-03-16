@@ -1,4 +1,5 @@
 export * from "./sign-in";
+export * from "./sign-up";
 
 function HomeScreen(props: {}) {
   // prop destruction

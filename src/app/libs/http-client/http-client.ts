@@ -1,17 +1,17 @@
-import Axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
-import { API_ENDPOINT } from '@configs';
-import { getToken } from '@libs/util';
+import Axios, { AxiosRequestConfig, AxiosResponse } from "axios";
+import { API_ENDPOINT } from "@configs";
 
 export const httpClient = (() => {
   const axios = Axios.create({ baseURL: API_ENDPOINT, withCredentials: true });
   axios.interceptors.request.use((config) => {
     if (!config?.headers) {
-      throw new Error(`Expected 'config' and 'config.headers' not to be undefined`);
+      throw new Error(
+        `Expected 'config' and 'config.headers' not to be undefined`
+      );
     }
-    config.headers['Content-Type'] = 'application/json; charset=utf-8';
-    config.headers['X-Requested-With'] = 'XMLHttpRequest';
-    config.headers.Accept = '*/*';
-    config.headers.Authorization = `Bearer ${getToken()}`;
+    config.headers["Content-Type"] = "application/json; charset=utf-8";
+    config.headers["X-Requested-With"] = "XMLHttpRequest";
+    config.headers.Accept = "*/*";
     return config;
   });
 
@@ -28,7 +28,10 @@ export const httpClient = (() => {
   return {
     async get<T>(
       url: string,
-      config?: { params?: Record<string, any>; paramsSerializer?: (param: Record<string, any>) => any }
+      config?: {
+        params?: Record<string, any>;
+        paramsSerializer?: (param: Record<string, any>) => any;
+      }
     ): Promise<T> {
       const res = await axios.get(url, config);
       return res?.data?.data;
@@ -41,7 +44,10 @@ export const httpClient = (() => {
       const res = await axios.patch(url, data);
       return res?.data?.data;
     },
-    async delete<T>(url: string, config?: AxiosRequestConfig): Promise<AxiosResponse<T>> {
+    async delete<T>(
+      url: string,
+      config?: AxiosRequestConfig
+    ): Promise<AxiosResponse<T>> {
       return axios.delete(url, config);
     },
   };
