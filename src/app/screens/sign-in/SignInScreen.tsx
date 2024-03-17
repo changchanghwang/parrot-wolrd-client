@@ -5,7 +5,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { emailSchema, passwordSchema } from "@libs/schema";
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { SIGN_UP_ROUTES } from "@routes";
 import { memberRepository } from "@repositories";
 import { useMutation } from "@libs/query";
@@ -20,12 +20,13 @@ const validationSchema = yup
 function SignInScreen() {
   // prop destruction
   // lib hooks
+  const navigate = useNavigate();
   // state, ref hooks
   const [errorMessage, setErrorMessage] = useState<string>("");
   // form hooks
   const {
     register,
-    handleSubmit,
+    handleSubmit: handleFormSubmit,
     getValues,
     formState: { errors },
   } = useForm<yup.InferType<typeof validationSchema>>({
@@ -37,15 +38,41 @@ function SignInScreen() {
     },
   });
   // query hooks
-  const [signIn, { isLoading }] = useMutation(memberRepository.signIn);
+  const [signIn, { isLoading }] = useMutation(memberRepository.signIn, {
+    onCompleted: () => {
+      navigate("/", { replace: true });
+    },
+  });
   // calculated values
   // effects
   useEffect(() => {
     if (!Object.keys(errors).length) {
       setErrorMessage("");
     }
+    return () => {
+      setErrorMessage("");
+    };
   }, [errors]);
   // handlers
+  const handleSubmit = async (e: any) => {
+    await handleFormSubmit(
+      async ({ email, password }) => {
+        await signIn({ email, password });
+      },
+      (e) => {
+        if (e.password?.type === "required") {
+          setErrorMessage("비밀번호를 입력해주세요.");
+        }
+        if (e.email?.type === "required") {
+          setErrorMessage("이메일을 입력해주세요.");
+        } else {
+          setErrorMessage(
+            "이메일 또는 비밀번호가 잘못 입력되었습니다. 다시 확인해주세요."
+          );
+        }
+      }
+    )(e);
+  };
 
   return (
     <Stack
@@ -73,6 +100,9 @@ function SignInScreen() {
             placeholder="이메일"
             {...register("email")}
             defaultValue={getValues("email")}
+            onKeyDown={async (e) => {
+              e.key === "Enter" && (await handleSubmit(e));
+            }}
           />
           <TextField
             css={{ borderRadius: "8px" }}
@@ -80,6 +110,9 @@ function SignInScreen() {
             type="password"
             {...register("password")}
             defaultValue={getValues("password")}
+            onKeyDown={async (e) => {
+              e.key === "Enter" && (await handleSubmit(e));
+            }}
           />
           <Stack direction="column" spacing="4px">
             {errorMessage && (
@@ -97,23 +130,7 @@ function SignInScreen() {
                 },
                 fontSize: "20px",
               }}
-              onClick={handleSubmit(
-                async ({ email, password }) => {
-                  await signIn({ email, password });
-                },
-                (e) => {
-                  if (e.password?.type === "required") {
-                    setErrorMessage("비밀번호를 입력해주세요.");
-                  }
-                  if (e.email?.type === "required") {
-                    setErrorMessage("이메일을 입력해주세요.");
-                  } else {
-                    setErrorMessage(
-                      "이메일 또는 비밀번호가 잘못 입력되었습니다. 다시 확인해주세요."
-                    );
-                  }
-                }
-              )}
+              onClick={handleSubmit}
             >
               로그인
             </Button>
