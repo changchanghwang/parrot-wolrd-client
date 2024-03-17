@@ -5,6 +5,8 @@ import {
   useQueryClient,
   QueryClient,
   QueryClientProvider,
+  type UseMutateAsyncFunction,
+  type UseMutationResult,
 } from "react-query";
 
 export { QueryClient, QueryClientProvider, useQueryClient };
@@ -59,7 +61,10 @@ export const useMutation = <Variables, Result>(
     onCompleted?: (data: Result) => void;
     onError?: (err: Error) => void;
   }
-) => {
+): [
+  UseMutateAsyncFunction<Result, Error, Variables, unknown>,
+  UseMutationResult<Result, Error, Variables, unknown>,
+] => {
   const queryClient = useQueryClient();
   const queryKey = useMemo(() => {
     const queryKey = queryKeyMap.get(mutateFn);
@@ -69,7 +74,7 @@ export const useMutation = <Variables, Result>(
     return queryKey;
   }, [mutateFn]);
 
-  return reactUseMutation(queryKey, mutateFn, {
+  const mutation = reactUseMutation(queryKey, mutateFn, {
     onSuccess: (result) => {
       !options?.disableRefetch &&
         queryClient.refetchQueries(queryKey, { exact: false });
@@ -77,4 +82,6 @@ export const useMutation = <Variables, Result>(
     },
     onError: options?.onError,
   });
+
+  return [mutation.mutateAsync, mutation];
 };

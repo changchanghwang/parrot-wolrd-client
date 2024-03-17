@@ -7,6 +7,8 @@ import { emailSchema, passwordSchema } from "@libs/schema";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { SIGN_UP_ROUTES } from "@routes";
+import { memberRepository } from "@repositories";
+import { useMutation } from "@libs/query";
 
 const validationSchema = yup
   .object({
@@ -35,6 +37,7 @@ function SignInScreen() {
     },
   });
   // query hooks
+  const [signIn, { isLoading }] = useMutation(memberRepository.signIn);
   // calculated values
   // effects
   useEffect(() => {
@@ -95,8 +98,8 @@ function SignInScreen() {
                 fontSize: "20px",
               }}
               onClick={handleSubmit(
-                (data) => {
-                  console.log(data);
+                async ({ email, password }) => {
+                  await signIn({ email, password });
                 },
                 (e) => {
                   if (e.password?.type === "required") {
