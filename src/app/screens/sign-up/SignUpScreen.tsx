@@ -7,6 +7,9 @@ import { emailSchema, passwordSchema } from "@libs/schema";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { SIGN_UP_ROUTES } from "@routes";
+import { useMutation } from "@libs/query";
+import { verificationRepository } from "@repositories";
+import { VerificationType } from "@models";
 
 const validationSchema = yup
   .object({
@@ -30,6 +33,7 @@ function SignUpScreen() {
   // lib hooks
   // state, ref hooks
   const [errorMessage, setErrorMessage] = useState<string>("");
+  const [verificationId, setVerificationId] = useState<number>();
   // form hooks
   const {
     register,
@@ -47,6 +51,14 @@ function SignUpScreen() {
     },
   });
   // query hooks
+  const [verifyEmail, { isLoading }] = useMutation(
+    verificationRepository.verifyEmail,
+    {
+      onCompleted: (data) => {
+        setVerificationId(data.id);
+      },
+    }
+  );
   // calculated values
   // effects
   useEffect(() => {
@@ -86,7 +98,15 @@ function SignUpScreen() {
               error={!!errors.email}
               helperText={errors.email?.message}
             />
-            <Button variant="outlined" onClick={() => {}}>
+            <Button
+              variant="outlined"
+              onClick={async () => {
+                await verifyEmail({
+                  email: getValues("email"),
+                  type: VerificationType.SIGNIN,
+                });
+              }}
+            >
               인증
             </Button>
           </Stack>
