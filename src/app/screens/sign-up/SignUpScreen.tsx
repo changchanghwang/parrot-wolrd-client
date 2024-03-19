@@ -15,6 +15,7 @@ const validationSchema = yup
   .object({
     email: emailSchema().required("이메일을 입력해주세요."),
     authCode: yup.string().required("인증번호를 입력해주세요."),
+    nickName: yup.string().required("닉네임을 입력해주세요."),
     password: passwordSchema({ match: true }).required(
       "비밀번호를 입력해주세요."
     ),
@@ -46,6 +47,7 @@ function SignUpScreen() {
     defaultValues: {
       email: "",
       authCode: "",
+      nickName: "",
       password: "",
       passwordConfirm: "",
     },
@@ -99,6 +101,7 @@ function SignUpScreen() {
               helperText={errors.email?.message}
             />
             <Button
+              css={{ flex: 0.2, fontSize: "12px" }}
               variant="outlined"
               onClick={async () => {
                 await verifyEmail({
@@ -119,8 +122,29 @@ function SignUpScreen() {
               error={!!errors.authCode}
               helperText={errors.authCode?.message}
             />
-            <Button variant="outlined" onClick={() => {}}>
+            <Button
+              css={{ flex: 0.2, fontSize: "12px" }}
+              variant="outlined"
+              onClick={() => {}}
+            >
               확인
+            </Button>
+          </Stack>
+          <Stack direction="row" spacing="8px">
+            <TextField
+              css={{ borderRadius: "8px", flex: 1 }}
+              placeholder="닉네임"
+              {...register("nickName")}
+              defaultValue={getValues("nickName")}
+              error={!!errors.nickName}
+              helperText={errors.nickName?.message}
+            />
+            <Button
+              css={{ flex: 0.2, fontSize: "12px" }}
+              variant="outlined"
+              onClick={() => {}}
+            >
+              중복확인
             </Button>
           </Stack>
           <TextField
