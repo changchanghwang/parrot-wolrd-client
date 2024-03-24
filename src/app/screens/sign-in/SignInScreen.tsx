@@ -6,8 +6,8 @@ import * as yup from "yup";
 import { emailSchema, passwordSchema } from "@libs/schema";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { SIGN_UP_ROUTES } from "@routes";
-import { memberRepository } from "@repositories";
+import { ROUTE_SIGN_UP } from "@routes";
+import { userRepository } from "@repositories";
 import { useMutation } from "@libs/query";
 
 const validationSchema = yup
@@ -38,7 +38,7 @@ function SignInScreen() {
     },
   });
   // query hooks
-  const [signIn, { isLoading }] = useMutation(memberRepository.signIn, {
+  const [signIn, { isLoading }] = useMutation(userRepository.signIn, {
     onCompleted: () => {
       navigate("/", { replace: true });
     },
@@ -85,7 +85,7 @@ function SignInScreen() {
       <Stack
         direction="column"
         css={{
-          width: "23%",
+          width: "26%",
           padding: "32px",
           boxShadow: "20px 16px 0px #000",
           borderRadius: "16px",
@@ -144,7 +144,7 @@ function SignInScreen() {
               }}
             >
               계정이 없으신가요? &nbsp;
-              <Link to={SIGN_UP_ROUTES} css={{ color: "#5555FF" }}>
+              <Link to={ROUTE_SIGN_UP} css={{ color: "#5555FF" }}>
                 회원가입
               </Link>
             </Typography>

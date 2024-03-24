@@ -1,2 +1,2 @@
-export * from "./member-repository";
+export * from "./user-repository";
 export * from "./verification-repository";

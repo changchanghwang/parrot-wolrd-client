@@ -1,6 +1,11 @@
 import { Route, Routes } from "react-router-dom";
-import { HomeScreen, SignInScreen, SignUpScreen } from "@screens";
-import { SIGN_IN_ROUTES, SIGN_UP_ROUTES } from "./const";
+import {
+  HomeScreen,
+  SignInScreen,
+  SignUpScreen,
+  SignUpSuccessScreen,
+} from "@screens";
+import { ROUTE_SIGN_IN, ROUTE_SIGN_UP, ROUTE_SIGN_UP_SUCCESS } from "./const";
 
 function AppRouter() {
   // prop destruction
@@ -14,8 +19,9 @@ function AppRouter() {
   return (
     <Routes>
       <Route path="/" element={<HomeScreen />} />
-      <Route path={SIGN_IN_ROUTES} element={<SignInScreen />} />
-      <Route path={SIGN_UP_ROUTES} element={<SignUpScreen />} />
+      <Route path={ROUTE_SIGN_IN} element={<SignInScreen />} />
+      <Route path={ROUTE_SIGN_UP} element={<SignUpScreen />} />
+      <Route path={ROUTE_SIGN_UP_SUCCESS} element={<SignUpSuccessScreen />} />
     </Routes>
   );
 }

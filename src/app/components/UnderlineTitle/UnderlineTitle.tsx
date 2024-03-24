@@ -1,5 +1,3 @@
-import type { Theme } from "@libs/theme";
-
 function UnderlineTitle(props: { title: string; className?: string }) {
   // prop destruction
   const { title, className } = props;

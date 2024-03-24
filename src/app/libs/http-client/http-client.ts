@@ -34,15 +34,15 @@ export const httpClient = (() => {
       }
     ): Promise<T> {
       const res = await axios.get(url, config);
-      return res?.data;
+      return res?.data.data;
     },
     async post<T>(url: string, data: Record<string, any>): Promise<T> {
       const res = await axios.post(url, data);
-      return res?.data;
+      return res?.data.data;
     },
     async patch<T>(url: string, data: Record<string, any>): Promise<T> {
       const res = await axios.patch(url, data);
-      return res?.data;
+      return res?.data.data;
     },
     async delete<T>(
       url: string,

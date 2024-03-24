@@ -1,6 +1,6 @@
 import * as yup from "yup";
 
-export const emailSchema = () => yup.string().email();
+export const emailSchema = () => yup.string().email("이메일 형식이 아닙니다.");
 export const passwordSchema = ({ match }: { match: boolean }) =>
   match
     ? yup

@@ -1,10 +1,4 @@
-import React, {
-  createContext,
-  ReactNode,
-  useContext,
-  useMemo,
-  useState,
-} from "react";
+import { ReactNode, useMemo } from "react";
 import { Theme } from "@emotion/react";
 import {
   createTheme,
@@ -34,6 +28,10 @@ function ThemeProvider(props: { children: ReactNode }) {
               borderRadius: "8px",
               "&.Mui-focused": {
                 borderColor: "#5555FF",
+              },
+              "&.Mui-disabled": {
+                backgroundColor: "#F4F6F8",
+                border: "2px solid #F1F3F0",
               },
               "&.Mui-error": {
                 borderColor: "#FF2626",

@@ -1,8 +1,7 @@
-export enum VerificationType {
-  SIGNIN,
-}
+export type VerificationType = "SIGNUP";
 
-class Verification {
+export class VerificationModel {
   id!: number;
+  expiredAt!: DateTime;
   type!: VerificationType;
 }
