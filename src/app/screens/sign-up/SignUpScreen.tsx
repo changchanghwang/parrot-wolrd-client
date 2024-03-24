@@ -147,7 +147,7 @@ function SignUpScreen() {
           padding: "32px",
           boxShadow: "20px 16px 0px #000",
           borderRadius: "16px",
-          border: "2px solid #000",
+          border: "3px solid #000",
         }}
         spacing="32px"
       >
