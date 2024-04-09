@@ -15,7 +15,7 @@
       "  $0",
       "}",
       "  $0",
-      "export { ${1:$TM_FILENAME_BASE} }",
+      "export { $TM_FILENAME_BASE }",
     ],
     "description": "New Component",
   },
