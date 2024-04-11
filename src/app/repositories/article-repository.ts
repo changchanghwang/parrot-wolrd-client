@@ -4,7 +4,12 @@ import { queryKeyMap } from "@libs/query";
 import { ArticleModel } from "@models";
 
 export const articleRepository = {
-  async list(params: { page: number; limit: number }) {
+  async list(params: {
+    categoryCode: string;
+    page: number;
+    limit: number;
+    search?: { key: string; value: string };
+  }) {
     return httpClient.get<{ items: ArticleModel[]; count: number }>(
       "/articles",
       {

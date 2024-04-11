@@ -23,11 +23,11 @@ function ThemeProvider(props: { children: ReactNode }) {
         MuiOutlinedInput: {
           styleOverrides: {
             root: {
-              padding: "11px 16px",
+              padding: "8px 12px",
               border: "2px solid #B3BAC5",
               borderRadius: "8px",
               "&.Mui-focused": {
-                borderColor: "#5555FF",
+                borderColor: "#AFAFFF",
               },
               "&.Mui-disabled": {
                 backgroundColor: "#F4F6F8",
@@ -38,10 +38,11 @@ function ThemeProvider(props: { children: ReactNode }) {
               },
             },
             input: {
-              fontSize: "20px",
+              fontSize: "14px",
               fontWeight: 500,
               height: "24px",
               padding: "0",
+              verticalAlign: "middle",
             },
             notchedOutline: {
               border: "none",
@@ -77,6 +78,30 @@ function ThemeProvider(props: { children: ReactNode }) {
           styleOverrides: {
             root: {
               padding: "4px 12px",
+            },
+            contained: {
+              backgroundColor: "rgba(85,85,255,0.5)",
+              border: "3px solid #AFAFFF",
+              boxShadow: "none",
+              ":hover": {
+                backgroundColor: "rgba(85,85,255,0.4)",
+                boxShadow: "none",
+              },
+            },
+            outlined: {
+              padding: "8px 12px",
+              border: "2px solid #B3BAC5",
+              borderRadius: "8px",
+              "&.Mui-focused": {
+                borderColor: "#AFAFFF",
+              },
+              "&.Mui-disabled": {
+                backgroundColor: "#F4F6F8",
+                border: "2px solid #F1F3F0",
+              },
+              "&.Mui-error": {
+                borderColor: "#FF2626",
+              },
             },
           },
         },

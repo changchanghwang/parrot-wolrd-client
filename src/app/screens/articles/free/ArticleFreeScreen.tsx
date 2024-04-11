@@ -1,15 +1,17 @@
-import { Pagination, Stack, Typography } from "@mui/material";
+import { Pagination, Stack, TextField, Typography } from "@mui/material";
 import { useQuery } from "@libs/query";
 import { articleRepository } from "@repositories";
 import { useState } from "react";
-import { Article } from "@components";
+import { Article, Button, Select } from "@components";
 import { CategoryCode } from "@models";
+import { ROUTE_ARTICLES_WRITE } from "../../../routes";
 
 function ArticleFreeScreen() {
   // prop destruction
   // lib hooks
   // state, ref hooks
   const [page, setPage] = useState(1);
+  const [search, setSearch] = useState({ key: "title", value: "" });
 
   // form hooks
   // query hooks
@@ -24,6 +26,7 @@ function ArticleFreeScreen() {
   const { data: freeArticles } = useQuery(articleRepository.list, {
     variables: {
       categoryCode: CategoryCode.FREE,
+      search: search.value ? search : undefined,
       page,
       limit: 20,
     },
@@ -51,7 +54,48 @@ function ArticleFreeScreen() {
           count={Math.ceil((freeArticles?.count ?? 0) / 20)}
           page={page}
           onChange={(_, page) => setPage(page)}
+          showFirstButton
+          showLastButton
         />
+        <Stack
+          direction="row"
+          css={{
+            width: "100%",
+            justifyContent: "space-between",
+          }}
+        >
+          <div css={{ display: "flex", flex: 1 }} />
+          <Stack direction="row" spacing="8px" alignItems="center" flex={1}>
+            <Select
+              variant="outlined"
+              value={search.key}
+              options={[
+                { label: "제목", value: "title" },
+                { label: "제목+내용", value: "withContent" },
+                { label: "작성자", value: "author" },
+              ]}
+              onChange={(e) => {
+                setSearch({ ...search, key: e.target.value });
+              }}
+            />
+            <TextField
+              variant="outlined"
+              value={search.value}
+              onChange={(e) => setSearch({ ...search, value: e.target.value })}
+            />
+            <Button variant="outlined">검색</Button>
+          </Stack>
+
+          <Stack direction="row" flex={1} justifyContent="flex-end">
+            <Button
+              variant="contained"
+              component="a"
+              href={ROUTE_ARTICLES_WRITE}
+            >
+              글쓰기
+            </Button>
+          </Stack>
+        </Stack>
       </Stack>
     </Stack>
   );
