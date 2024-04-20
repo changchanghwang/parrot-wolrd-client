@@ -3,7 +3,8 @@ import { QueryClient } from "react-query";
 import { QueryClientProvider } from "@libs/query";
 import { BrowserRouter } from "react-router-dom";
 import { ThemeProvider } from "@libs/theme";
-import { AppRouter } from "./routes";
+import { AppRouter } from "@routes";
+import { AuthProvider } from "@libs/auth";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -22,7 +23,9 @@ function App() {
       <BrowserRouter>
         <ThemeProvider>
           <CssBaseline />
-          <AppRouter />
+          <AuthProvider>
+            <AppRouter />
+          </AuthProvider>
         </ThemeProvider>
       </BrowserRouter>
     </QueryClientProvider>

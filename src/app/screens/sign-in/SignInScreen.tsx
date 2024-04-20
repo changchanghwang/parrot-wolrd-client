@@ -5,10 +5,11 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { emailSchema, passwordSchema } from "@libs/schema";
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { ROUTE_SIGN_UP } from "@routes";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { ROUTE_HOME, ROUTE_SIGN_UP } from "@routes";
 import { userRepository } from "@repositories";
 import { useMutation } from "@libs/query";
+import ArrowLeft from "@assets/images/icons/icon-arrow-left.svg";
 
 const validationSchema = yup
   .object({
@@ -21,6 +22,7 @@ function SignInScreen() {
   // prop destruction
   // lib hooks
   const navigate = useNavigate();
+  const location = useLocation();
   // state, ref hooks
   const [errorMessage, setErrorMessage] = useState<string>("");
   // form hooks
@@ -93,7 +95,17 @@ function SignInScreen() {
         }}
         spacing="32px"
       >
-        <UnderlineTitle title="로그인" />
+        <Stack direction="row" justifyContent="space-between">
+          <Link
+            to={location.state ?? ROUTE_HOME}
+            replace
+            css={{ flex: 1, verticalAlign: "middle", cursor: "pointer" }}
+          >
+            <ArrowLeft css={{ width: "28px", height: "28px" }} />
+          </Link>
+          <UnderlineTitle title="로그인" css={{ flex: 1 }} />
+          <div css={{ flex: 1 }} />
+        </Stack>
         <Stack direction="column" spacing="16px">
           <TextField
             css={{ borderRadius: "8px" }}
@@ -144,7 +156,11 @@ function SignInScreen() {
               }}
             >
               계정이 없으신가요? &nbsp;
-              <Link to={ROUTE_SIGN_UP} css={{ color: "#5555FF" }}>
+              <Link
+                to={ROUTE_SIGN_UP}
+                state={location.pathname}
+                css={{ color: "#5555FF" }}
+              >
                 회원가입
               </Link>
             </Typography>

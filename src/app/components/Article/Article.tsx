@@ -2,7 +2,7 @@ import { Divider, Stack, Typography } from "@mui/material";
 import { ArticleModel } from "@models";
 import { fileRepository } from "@repositories";
 import { useQuery } from "@libs/query";
-import Document from "@assets/images/document.svg";
+import Document from "@assets/images/icons/document.svg";
 
 function Article(props: { article: ArticleModel }) {
   // prop destruction

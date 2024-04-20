@@ -1,5 +1,5 @@
 import { Stack, Typography } from "@mui/material";
-import { Image, WebMenu } from "@components";
+import { Image, WebMenu, Header } from "@components";
 import { ReactNode } from "react";
 
 function Layout(props: { children: ReactNode }) {
@@ -14,11 +14,15 @@ function Layout(props: { children: ReactNode }) {
   // handlers
   return (
     <Stack>
+      <Header />
       <Stack
         direction="row"
         justifyContent="center"
         alignItems="center"
         spacing="1%"
+        css={{
+          margin: "8px 0",
+        }}
       >
         <Image
           source={{

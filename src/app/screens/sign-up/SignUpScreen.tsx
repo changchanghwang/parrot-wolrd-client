@@ -9,8 +9,9 @@ import { useMutation } from "@libs/query";
 import { userRepository, verificationRepository } from "@repositories";
 import { Button } from "@components";
 import { Subject, debounceTime } from "rxjs";
-import { useNavigate } from "react-router-dom";
-import { ROUTE_SIGN_UP_SUCCESS } from "@routes";
+import { useNavigate, useLocation, Link } from "react-router-dom";
+import { ROUTE_HOME, ROUTE_SIGN_UP_SUCCESS } from "@routes";
+import ArrowLeft from "@assets/images/icons/icon-arrow-left.svg";
 
 const validationSchema = yup
   .object({
@@ -34,6 +35,7 @@ function SignUpScreen() {
   // prop destruction
   // lib hooks
   const navigate = useNavigate();
+  const location = useLocation();
   // state, ref hooks
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [verificationId, setVerificationId] = useState<number>();
@@ -151,7 +153,22 @@ function SignUpScreen() {
         }}
         spacing="32px"
       >
-        <UnderlineTitle title="회원가입" />
+        <Stack direction="row" justifyContent="space-between">
+          <Link
+            to={location.state ?? ROUTE_HOME}
+            replace
+            css={{ flex: 1, verticalAlign: "middle" }}
+          >
+            <ArrowLeft
+              css={{ width: "28px", height: "28px" }}
+              onClick={() => {
+                navigate(-1);
+              }}
+            />
+          </Link>
+          <UnderlineTitle title="회원가입" css={{ flex: 1 }} />
+          <div css={{ flex: 1 }} />
+        </Stack>
         <Stack direction="column" spacing="16px">
           <Stack direction="row" spacing="8px">
             <TextField
