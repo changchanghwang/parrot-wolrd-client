@@ -1,6 +1,7 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import {
   ArticleFreeScreen,
+  ArticleWriteScreen,
   HomeScreen,
   SignInScreen,
   SignUpScreen,
@@ -45,6 +46,16 @@ function AppRouter() {
           element={
             <Layout>
               <ArticleFreeScreen />
+            </Layout>
+          }
+        />
+      </Route>
+      <Route path={ROUTE_ARTICLES}>
+        <Route
+          path="write"
+          element={
+            <Layout>
+              <ArticleWriteScreen />
             </Layout>
           }
         />

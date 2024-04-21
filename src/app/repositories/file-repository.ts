@@ -22,6 +22,20 @@ export const fileRepository = {
       },
     });
   },
+
+  async upload({ file }: { file: File }) {
+    const data = new FormData();
+    data.append("file", file, file.name);
+
+    return httpClient.post<{ id: string; name: string; publicUrl: string }>(
+      "/files",
+      data,
+      {
+        headers: { "content-type": "multipart/form-data" },
+      }
+    );
+  },
 };
 
 queryKeyMap.set(fileRepository.list, ["File"]);
+queryKeyMap.set(fileRepository.upload, ["File"]);

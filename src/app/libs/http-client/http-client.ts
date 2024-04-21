@@ -36,8 +36,12 @@ export const httpClient = (() => {
       const res = await axios.get(url, config);
       return res?.data.data;
     },
-    async post<T>(url: string, data: Record<string, any>): Promise<T> {
-      const res = await axios.post(url, data);
+    async post<T>(
+      url: string,
+      data: Record<string, any>,
+      config?: AxiosRequestConfig<Record<string, any>>
+    ): Promise<T> {
+      const res = await axios.post(url, data, config);
       return res?.data.data;
     },
     async patch<T>(url: string, data: Record<string, any>): Promise<T> {
