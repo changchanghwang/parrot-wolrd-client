@@ -2,14 +2,17 @@ import Axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 import { API_ENDPOINT } from "@configs";
 
 export const httpClient = (() => {
-  const axios = Axios.create({ baseURL: API_ENDPOINT, withCredentials: true });
+  const axios = Axios.create({
+    baseURL: API_ENDPOINT,
+    withCredentials: true,
+    headers: { "Content-Type": "application/json; charset=utf-8" },
+  });
   axios.interceptors.request.use((config) => {
     if (!config?.headers) {
       throw new Error(
         `Expected 'config' and 'config.headers' not to be undefined`
       );
     }
-    config.headers["Content-Type"] = "application/json; charset=utf-8";
     config.headers["X-Requested-With"] = "XMLHttpRequest";
     config.headers.Accept = "*/*";
     return config;
