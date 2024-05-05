@@ -30,10 +30,10 @@ function Header() {
       >
         {!user && (
           <>
-            <Link to={ROUTE_SIGN_UP} state={location.pathname}>
+            <Link to={ROUTE_SIGN_UP} state={{ from: location.pathname }}>
               회원가입
             </Link>
-            <Link to={ROUTE_SIGN_IN} state={location.pathname}>
+            <Link to={ROUTE_SIGN_IN} state={{ from: location.pathname }}>
               로그인
             </Link>
           </>

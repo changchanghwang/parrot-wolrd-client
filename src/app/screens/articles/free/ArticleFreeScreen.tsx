@@ -1,14 +1,22 @@
-import { Pagination, Stack, TextField, Typography } from "@mui/material";
+import {
+  CircularProgress,
+  Pagination,
+  Stack,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { useQuery } from "@libs/query";
 import { articleRepository } from "@repositories";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { Article, Button, Select } from "@components";
 import { CategoryCode } from "@models";
-import { ROUTE_ARTICLES_WRITE } from "../../../routes";
+import { ROUTE_ARTICLES_FREE, ROUTE_ARTICLES_WRITE } from "../../../routes";
+import { useNavigate } from "react-router-dom";
 
 function ArticleFreeScreen() {
   // prop destruction
   // lib hooks
+  const navigate = useNavigate();
   // state, ref hooks
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState({ key: "title", value: "" });
@@ -42,14 +50,27 @@ function ArticleFreeScreen() {
       </Typography>
 
       <Stack direction="column" spacing="32px" alignItems="center">
-        <Stack direction="column" css={{ width: "100%" }}>
-          {announcements?.items.map((article) => (
-            <Article key={article.id} article={article} />
-          ))}
-          {freeArticles?.items.map((article) => (
-            <Article key={article.id} article={article} />
-          ))}
-        </Stack>
+        <Suspense
+          fallback={
+            <Stack
+              css={{
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <CircularProgress color="primary" />
+            </Stack>
+          }
+        >
+          <Stack direction="column" css={{ width: "100%" }}>
+            {announcements?.items.map((article) => (
+              <Article key={article.id} article={article} />
+            ))}
+            {freeArticles?.items.map((article) => (
+              <Article key={article.id} article={article} />
+            ))}
+          </Stack>
+        </Suspense>
         <Pagination
           count={Math.ceil((freeArticles?.count ?? 0) / 20)}
           page={page}
@@ -89,8 +110,11 @@ function ArticleFreeScreen() {
           <Stack direction="row" flex={1} justifyContent="flex-end">
             <Button
               variant="contained"
-              component="a"
-              href={ROUTE_ARTICLES_WRITE}
+              onClick={() =>
+                navigate(ROUTE_ARTICLES_WRITE, {
+                  state: { from: ROUTE_ARTICLES_FREE },
+                })
+              }
             >
               글쓰기
             </Button>

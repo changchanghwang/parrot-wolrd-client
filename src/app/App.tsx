@@ -5,6 +5,12 @@ import { BrowserRouter } from "react-router-dom";
 import { ThemeProvider } from "@libs/theme";
 import { AppRouter } from "@routes";
 import { AuthProvider } from "@libs/auth";
+// import { Quill } from "react-quill";
+// import { ImageActions } from "@xeger/quill-image-actions";
+// import { ImageFormats } from "@xeger/quill-image-formats";
+
+// Quill.register("modules/imageActions", ImageActions);
+// Quill.register("modules/imageFormats", ImageFormats);
 
 const queryClient = new QueryClient({
   defaultOptions: {

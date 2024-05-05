@@ -1,7 +1,7 @@
 import { stringify } from "qs";
 import { httpClient } from "@libs/http-client";
 import { queryKeyMap } from "@libs/query";
-import { ArticleModel } from "@models";
+import { ArticleModel, CategoryCode } from "@models";
 
 export const articleRepository = {
   async list(params: {
@@ -20,6 +20,16 @@ export const articleRepository = {
       }
     );
   },
+
+  async upload(data: {
+    title: string;
+    categoryCode: CategoryCode;
+    content: string;
+    fileIds: string[];
+  }) {
+    return httpClient.post("/articles", data);
+  },
 };
 
 queryKeyMap.set(articleRepository.list, ["Article"]);
+queryKeyMap.set(articleRepository.upload, ["Article"]);

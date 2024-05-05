@@ -11,6 +11,7 @@ function Article(props: { article: ArticleModel }) {
   const { data: files } = useQuery(fileRepository.list, {
     variables: {
       ids: article.fileIds,
+      suspense: true,
     },
   });
   // state, ref hooks

@@ -155,7 +155,7 @@ function SignUpScreen() {
       >
         <Stack direction="row" justifyContent="space-between">
           <Link
-            to={location.state ?? ROUTE_HOME}
+            to={location.state.from ?? ROUTE_HOME}
             replace
             css={{ flex: 1, verticalAlign: "middle" }}
           >

@@ -1,24 +1,38 @@
 import { Stack, TextField, Typography } from "@mui/material";
 import * as yup from "yup";
-import Editor from "react-quill";
+import Editor, { Quill } from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { ArticleModel, CategoryCode } from "@models";
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Select } from "@components";
-import { fileRepository } from "@repositories";
-import { useRef } from "react";
+import { Button, Select } from "@components";
+import { articleRepository, fileRepository } from "@repositories";
+import { useMemo, useRef } from "react";
 import { useMutation } from "@libs/query";
+import { useUploader } from "@hooks";
+import { ImageActions } from "@xeger/quill-image-actions";
+import { ImageFormats } from "@xeger/quill-image-formats";
+import { useLocation, useNavigate } from "react-router-dom";
+import { ROUTE_ARTICLES } from "../../../routes";
+
+Quill.register("modules/imageActions", ImageActions);
+Quill.register("modules/imageFormats", ImageFormats);
 
 const validationSchema = yup.object({
   title: yup.string().required(),
-  categoryCode: yup.string().required(),
+  categoryCode: yup.mixed<CategoryCode>().required(),
   content: yup.string().required(),
 });
 
 function ArticleWriteScreen() {
   // prop destruction
   // lib hooks
+  const { upload, uploadedFiles, cancel } = useUploader(
+    fileRepository.upload,
+    {}
+  );
+  const navigate = useNavigate();
+  const location = useLocation();
   // state, ref hooks
   const editorRef = useRef<Editor | null>(null);
   // form hooks
@@ -26,7 +40,9 @@ function ArticleWriteScreen() {
     register,
     getValues,
     control,
-    formState: { errors },
+    formState: { isValid },
+    setValue,
+    handleSubmit,
   } = useForm<yup.InferType<typeof validationSchema>>({
     mode: "onChange",
     resolver: yupResolver(validationSchema),
@@ -37,28 +53,58 @@ function ArticleWriteScreen() {
     },
   });
   // query hooks
-  const [upload, { isLoading }] = useMutation(fileRepository.upload);
+  const [write, { isLoading: isWriting }] = useMutation(
+    articleRepository.upload,
+    {
+      // onCompleted: () => {
+      //   navigate(location.state.from ?? ROUTE_ARTICLES, { replace: true });
+      // },
+    }
+  );
   // calculated values
+  const modules = useMemo(() => {
+    return {
+      imageActions: {},
+      imageFormats: {},
+      toolbar: {
+        container: [
+          [{ header: [1, 2, 3, 4, 5, 6, false] }],
+          ["bold", "italic", "underline", "strike", "blockquote"],
+          [{ list: "ordered" }, { list: "bullet" }],
+          [{ color: [] }, { background: [] }],
+          [{ align: [] }, "link", "image", "video"],
+          ["clean"],
+        ],
+        imageResize: {
+          parchment: Quill.import("parchment"),
+        },
+        handlers: {
+          image: async () => {
+            const input = document.createElement("input");
+            input.setAttribute("type", "file");
+            input.setAttribute("accept", "image/*");
+            input.click();
+
+            input.addEventListener("change", async () => {
+              const file = input.files?.[0];
+              if (file) {
+                const res = await upload({ file });
+                const imgUrl = res?.publicUrl;
+                if (imgUrl) {
+                  const editor = editorRef.current!.getEditor();
+                  const range = editor.getSelection();
+                  editor.insertEmbed(range!.index, "image", imgUrl);
+                  editor.setSelection(range!);
+                }
+              }
+            });
+          },
+        },
+      },
+    };
+  }, []);
   // effects
   // handlers
-  const handleUploadFiles = async () => {
-    const input = document.createElement("input");
-    input.setAttribute("type", "file");
-    input.setAttribute("accept", "image/*");
-    input.click();
-
-    input.addEventListener("change", async () => {
-      const file = input.files?.[0];
-      if (file) {
-        const res = await upload({ file });
-        const imgUrl = res.publicUrl;
-        const editor = editorRef.current!.getEditor();
-        const range = editor.getSelection();
-        editor.insertEmbed(range!.index, "image", imgUrl);
-        editor.setSelection(range!);
-      }
-    });
-  };
 
   return (
     <Stack direction="column" spacing="32px">
@@ -87,71 +133,73 @@ function ArticleWriteScreen() {
           name="content"
           render={({ field: { value, onChange } }) => (
             <Editor
+              formats={[
+                "header",
+                "bold",
+                "italic",
+                "underline",
+                "strike",
+                "blockquote",
+                "list",
+                "bullet",
+                "color",
+                "background",
+                "align",
+                "link",
+                "image",
+                "video",
+                "width",
+                "height",
+              ]}
               ref={editorRef}
-              modules={{
-                toolbar: {
-                  container: [
-                    [{ header: [1, 2, 3, 4, 5, 6, false] }],
-                    [{ align: [] }],
-                    ["bold", "italic", "underline", "strike", "blockquote"],
-                    [{ list: "ordered" }, { list: "bullet" }, "link"],
-                    [
-                      {
-                        color: [
-                          "#000000",
-                          "#e60000",
-                          "#ff9900",
-                          "#ffff00",
-                          "#008a00",
-                          "#0066cc",
-                          "#9933ff",
-                          "#ffffff",
-                          "#facccc",
-                          "#ffebcc",
-                          "#ffffcc",
-                          "#cce8cc",
-                          "#cce0f5",
-                          "#ebd6ff",
-                          "#bbbbbb",
-                          "#f06666",
-                          "#ffc266",
-                          "#ffff66",
-                          "#66b966",
-                          "#66a3e0",
-                          "#c285ff",
-                          "#888888",
-                          "#a10000",
-                          "#b26b00",
-                          "#b2b200",
-                          "#006100",
-                          "#0047b2",
-                          "#6b24b2",
-                          "#444444",
-                          "#5c0000",
-                          "#663d00",
-                          "#666600",
-                          "#003700",
-                          "#002966",
-                          "#3d1466",
-                          "custom-color",
-                        ],
-                      },
-                      { background: [] },
-                    ],
-                    ["image", "video"],
-                    ["clean"],
-                  ],
-                  handlers: { image: handleUploadFiles },
-                },
-              }}
+              modules={modules}
               value={value}
               onChange={onChange}
-              style={{
-                height: "300px",
+              css={{
+                ".ql-editor": {
+                  height: "450px",
+                },
               }}
             />
           )}
         />
+      </Stack>
+      <Stack direction="row" spacing="8px" justifyContent="flex-end">
+        <Button
+          variant="text"
+          onClick={() =>
+            navigate(location.state.from ?? ROUTE_ARTICLES, { replace: true })
+          }
+        >
+          취소
+        </Button>
+        <Button
+          variant="contained"
+          loading={isWriting}
+          disabled={!isValid}
+          onClick={handleSubmit(async ({ title, categoryCode, content }) => {
+            console.log("###", uploadedFiles);
+            cancel(
+              uploadedFiles
+                .filter((file) => {
+                  const regex = new RegExp(file.publicUrl, "g");
+                  console.log("!!!", file.name, regex.test(content));
+                  return regex.test(content);
+                })
+                .map((file) => file.id)
+            );
+            console.log("$$$", uploadedFiles);
+
+            await write({
+              title,
+              categoryCode,
+              content,
+              fileIds: uploadedFiles.map((file) => file.id),
+            });
+          })}
+        >
+          작성
+        </Button>
       </Stack>
     </Stack>
   );

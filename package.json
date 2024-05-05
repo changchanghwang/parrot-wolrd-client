@@ -13,6 +13,8 @@
     "@emotion/styled": "^11.11.0",
     "@hookform/resolvers": "^3.3.4",
     "@mui/material": "^5.15.13",
+    "@xeger/quill-image-actions": "^0.7.2",
+    "@xeger/quill-image-formats": "^0.7.2",
     "axios": "^1.6.7",
     "material-ui-popup-state": "^5.1.0",
     "qs": "^6.12.0",
