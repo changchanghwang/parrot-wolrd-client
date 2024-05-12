@@ -41,7 +41,6 @@ function ArticleWriteScreen() {
     getValues,
     control,
     formState: { isValid },
-    setValue,
     handleSubmit,
   } = useForm<yup.InferType<typeof validationSchema>>({
     mode: "onChange",
@@ -56,9 +55,9 @@ function ArticleWriteScreen() {
   const [write, { isLoading: isWriting }] = useMutation(
     articleRepository.upload,
     {
-      // onCompleted: () => {
-      //   navigate(location.state.from ?? ROUTE_ARTICLES, { replace: true });
-      // },
+      onCompleted: () => {
+        navigate(location.state.from ?? ROUTE_ARTICLES, { replace: true });
+      },
     }
   );
   // calculated values
@@ -178,17 +177,14 @@ function ArticleWriteScreen() {
           loading={isWriting}
           disabled={!isValid}
           onClick={handleSubmit(async ({ title, categoryCode, content }) => {
-            console.log("###", uploadedFiles);
             cancel(
               uploadedFiles
                 .filter((file) => {
                   const regex = new RegExp(file.publicUrl, "g");
-                  console.log("!!!", file.name, regex.test(content));
                   return regex.test(content);
                 })
                 .map((file) => file.id)
             );
-            console.log("$$$", uploadedFiles);
 
             await write({
               title,
