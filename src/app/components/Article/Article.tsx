@@ -3,26 +3,34 @@ import { ArticleModel } from "@models";
 import { fileRepository } from "@repositories";
 import { useQuery } from "@libs/query";
 import Document from "@assets/images/icons/document.svg";
+import { useNavigate } from "react-router-dom";
+import { ROUTE_ARTICLES_DETAIL } from "@routes";
 
 function Article(props: { article: ArticleModel }) {
   // prop destruction
   const { article } = props;
   // lib hooks
+  const navigate = useNavigate();
+  // state, ref hooks
+  // form hooks
+  // query hooks
   const { data: files } = useQuery(fileRepository.list, {
     variables: {
       ids: article.fileIds,
       suspense: true,
     },
   });
-  // state, ref hooks
-  // form hooks
-  // query hooks
   // calculated values
   // effects
   // handlers
   return (
     <Stack direction="column" spacing="8px" css={{ height: "64px" }}>
-      <Stack key={article.id} direction="row" spacing="8px">
+      <Stack
+        key={article.id}
+        direction="row"
+        spacing="8px"
+        onClick={() => navigate(ROUTE_ARTICLES_DETAIL)}
+      >
         {files?.length ? (
           <img
             src={files[0].publicUrl}

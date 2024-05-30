@@ -29,7 +29,12 @@ export const articleRepository = {
   }) {
     return httpClient.post("/articles", data);
   },
+
+  async retrieve(params: { id: string }) {
+    return httpClient.get<ArticleModel>(`/articles/${params.id}`);
+  },
 };
 
 queryKeyMap.set(articleRepository.list, ["Article"]);
 queryKeyMap.set(articleRepository.upload, ["Article"]);
+queryKeyMap.set(articleRepository.retrieve, ["Article"]);

@@ -1,6 +1,6 @@
-import { Stack, Typography } from "@mui/material";
+import { CircularProgress, Stack, Typography } from "@mui/material";
 import { Image, WebMenu, Header } from "@components";
-import { ReactNode } from "react";
+import { ReactNode, Suspense } from "react";
 
 function Layout(props: { children: ReactNode }) {
   // prop destruction
@@ -46,7 +46,24 @@ function Layout(props: { children: ReactNode }) {
           margin: "16px auto",
         }}
       >
-        {children}
+        <Suspense
+          fallback={
+            <div
+              css={{
+                height: "100%",
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "center",
+                alignItems: "center",
+                textAlign: "center",
+              }}
+            >
+              <CircularProgress />
+            </div>
+          }
+        >
+          {children}
+        </Suspense>
       </Stack>
     </Stack>
   );

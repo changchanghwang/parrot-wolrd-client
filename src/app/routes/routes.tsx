@@ -1,5 +1,6 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import {
+  ArticleDetailScreen,
   ArticleFreeScreen,
   ArticleWriteScreen,
   HomeScreen,
@@ -13,7 +14,7 @@ import {
   ROUTE_SIGN_UP,
   ROUTE_SIGN_UP_SUCCESS,
 } from "./const";
-import { Layout } from "../components";
+import { Layout } from "@components";
 
 function AppRouter() {
   // prop destruction
@@ -49,13 +50,19 @@ function AppRouter() {
             </Layout>
           }
         />
-      </Route>
-      <Route path={ROUTE_ARTICLES}>
         <Route
           path="write"
           element={
             <Layout>
               <ArticleWriteScreen />
+            </Layout>
+          }
+        />
+        <Route
+          path="detail"
+          element={
+            <Layout>
+              <ArticleDetailScreen />
             </Layout>
           }
         />
